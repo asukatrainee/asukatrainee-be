@@ -3,17 +3,22 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile
-    container_name: ${APP_NAME:-go-gin-clean-starter}-app
+    container_name: ${APP_NAME:-be}-app
     volumes:
       - .:/app
+    depends_on:
+      - postgres
     ports:
       - ${GOLANG_PORT:-8888}:8888
     networks:
       - app-network
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
 
   nginx:
     image: nginx:latest
-    container_name: ${APP_NAME:-go-gin-clean-starter}-nginx
+    container_name: ${APP_NAME:-nginx}-nginx
     ports:
       - ${NGINX_PORT:-81}:80
     volumes:
@@ -26,7 +31,7 @@ services:
 
   postgres:
     hostname: postgres
-    container_name: ${APP_NAME:-go-gin-clean-starter}-db
+    container_name: ${APP_NAME:-postgres}-db
     image: postgres:latest
     ports:
       - ${DB_PORT}:5432

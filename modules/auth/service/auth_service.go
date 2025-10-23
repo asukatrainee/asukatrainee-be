@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"log"
 
 	"github.com/Caknoooo/go-gin-clean-starter/database/entities"
 	"github.com/Caknoooo/go-gin-clean-starter/modules/auth/dto"
@@ -62,13 +63,14 @@ func (s *authService) Register(ctx context.Context, req userDto.UserCreateReques
 	}
 
 	user := entities.User{
-		ID:         uuid.New(),
-		Name:       req.Name,
-		Email:      req.Email,
-		TelpNumber: req.TelpNumber,
-		Password:   string(hashedPassword),
-		Role:       "user",
-		IsVerified: false,
+		ID:          uuid.New(),
+		Name:        req.Name,
+		Email:       req.Email,
+		PhoneNumber: req.PhoneNumber,
+		Password:    string(hashedPassword),
+		Institution: req.Institution,
+		Role:        "user",
+		IsVerified:  false,
 	}
 
 	createdUser, err := s.userRepository.Register(ctx, s.db, user)
@@ -77,12 +79,13 @@ func (s *authService) Register(ctx context.Context, req userDto.UserCreateReques
 	}
 
 	return userDto.UserResponse{
-		ID:         createdUser.ID.String(),
-		Name:       createdUser.Name,
-		Email:      createdUser.Email,
-		TelpNumber: createdUser.TelpNumber,
-		Role:       createdUser.Role,
-		IsVerified: createdUser.IsVerified,
+		ID:          createdUser.ID.String(),
+		Name:        createdUser.Name,
+		Email:       createdUser.Email,
+		PhoneNumber: createdUser.PhoneNumber,
+		Institution: createdUser.Institution,
+		Role:        createdUser.Role,
+		IsVerified:  createdUser.IsVerified,
 	}, nil
 }
 
@@ -92,9 +95,22 @@ func (s *authService) Login(ctx context.Context, req userDto.UserLoginRequest) (
 		return dto.TokenResponse{}, userDto.ErrEmailNotFound
 	}
 
+	// --- TAMBAHKAN BLOK DEBUG INI ---
+	log.Printf("DEBUG: Membandingkan password untuk user: %s", user.Email)
+	log.Printf("DEBUG: Hash dari DB (panjang %d): '%s'", len(user.Password), user.Password)
+	log.Printf("DEBUG: Password dari Request (panjang %d): '%s'", len(req.Password), req.Password)
+	// --- AKHIR BLOK DEBUG ---
+
 	isValid, err := helpers.CheckPassword(user.Password, []byte(req.Password))
 	if err != nil || !isValid {
 		return dto.TokenResponse{}, dto.ErrInvalidCredentials
+	}
+
+	if err != nil {
+		log.Printf("DEBUG: helpers.CheckPassword MENGEMBALIKAN ERROR: %v", err)
+	}
+	if !isValid {
+		log.Printf("DEBUG: helpers.CheckPassword MENGEMBALIKAN isValid = false")
 	}
 
 	accessToken := s.jwtService.GenerateAccessToken(user.ID.String(), user.Role)

@@ -2,7 +2,6 @@ package dto
 
 import (
 	"errors"
-	"mime/multipart"
 
 	"github.com/Caknoooo/go-gin-clean-starter/database/entities"
 	"github.com/Caknoooo/go-gin-clean-starter/pkg/dto"
@@ -50,21 +49,22 @@ var (
 
 type (
 	UserCreateRequest struct {
-		Name       string                `json:"name" form:"name" binding:"required,min=2,max=100"`
-		TelpNumber string                `json:"telp_number" form:"telp_number" binding:"omitempty,min=8,max=20"`
-		Email      string                `json:"email" form:"email" binding:"required,email"`
-		Password   string                `json:"password" form:"password" binding:"required,min=8"`
-		Image      *multipart.FileHeader `json:"image" form:"image"`
+		Name        string `json:"name" form:"name" binding:"required,min=2,max=100"`
+		PhoneNumber string `json:"phone_number" form:"phone_number" binding:"omitempty,min=8,max=20"`
+		Email       string `json:"email" form:"email" binding:"required,email"`
+		Password    string `json:"password" form:"password" binding:"required,min=8"`
+		Institution string `json:"institution" form:"institution" binding:"required,min=1,max=20"`
 	}
 
 	UserResponse struct {
-		ID         string `json:"id"`
-		Name       string `json:"name"`
-		Email      string `json:"email"`
-		TelpNumber string `json:"telp_number"`
-		Role       string `json:"role"`
-		ImageUrl   string `json:"image_url"`
-		IsVerified bool   `json:"is_verified"`
+		ID          string `json:"id"`
+		Name        string `json:"name"`
+		Email       string `json:"email"`
+		PhoneNumber string `json:"phone_number"`
+		Institution string `json:"institution"`
+		Avatar      string `json:"avatar"`
+		Role        string `json:"role"`
+		IsVerified  bool   `json:"is_verified"`
 	}
 
 	UserPaginationResponse struct {
@@ -78,18 +78,20 @@ type (
 	}
 
 	UserUpdateRequest struct {
-		Name       string `json:"name" form:"name" binding:"omitempty,min=2,max=100"`
-		TelpNumber string `json:"telp_number" form:"telp_number" binding:"omitempty,min=8,max=20"`
-		Email      string `json:"email" form:"email" binding:"omitempty,email"`
+		Name        string `json:"name" form:"name" binding:"omitempty,min=2,max=100"`
+		PhoneNumber string `json:"phone_number" form:"phone_number" binding:"omitempty,min=8,max=20"`
+		Email       string `json:"email" form:"email" binding:"omitempty,email"`
+		Institution string `json:"institution" form:"institution" binding:"omitempty,min=1,max=20"`
 	}
 
 	UserUpdateResponse struct {
-		ID         string `json:"id"`
-		Name       string `json:"name"`
-		TelpNumber string `json:"telp_number"`
-		Role       string `json:"role"`
-		Email      string `json:"email"`
-		IsVerified bool   `json:"is_verified"`
+		ID          string `json:"id"`
+		Name        string `json:"name"`
+		PhoneNumber string `json:"phone_number"`
+		Role        string `json:"role"`
+		Email       string `json:"email"`
+		Institution string `json:"institution"`
+		IsVerified  bool   `json:"is_verified"`
 	}
 
 	SendVerificationEmailRequest struct {
@@ -108,5 +110,11 @@ type (
 	UserLoginRequest struct {
 		Email    string `json:"email" form:"email" binding:"required"`
 		Password string `json:"password" form:"password" binding:"required"`
+	}
+
+	GoogleUserData struct {
+		Email  string
+		Name   string
+		Avatar string
 	}
 )

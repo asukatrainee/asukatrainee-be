@@ -36,13 +36,14 @@ func (s *userService) GetUserById(ctx context.Context, userId string) (dto.UserR
 	}
 
 	return dto.UserResponse{
-		ID:         user.ID.String(),
-		Name:       user.Name,
-		Email:      user.Email,
-		TelpNumber: user.TelpNumber,
-		Role:       user.Role,
-		ImageUrl:   user.ImageUrl,
-		IsVerified: user.IsVerified,
+		ID:          user.ID.String(),
+		Name:        user.Name,
+		Email:       user.Email,
+		PhoneNumber: user.PhoneNumber,
+		Institution: user.Institution,
+		Avatar:      user.Avatar,
+		Role:        user.Role,
+		IsVerified:  user.IsVerified,
 	}, nil
 }
 
@@ -58,8 +59,12 @@ func (s *userService) Update(ctx context.Context, req dto.UserUpdateRequest, use
 	if req.Email != "" {
 		user.Email = req.Email
 	}
-	if req.TelpNumber != "" {
-		user.TelpNumber = req.TelpNumber
+	if req.PhoneNumber != "" {
+		user.PhoneNumber = req.PhoneNumber
+	}
+
+	if req.Institution != "" {
+		user.Institution = req.Institution
 	}
 
 	updatedUser, err := s.userRepository.Update(ctx, s.db, user)
@@ -68,12 +73,13 @@ func (s *userService) Update(ctx context.Context, req dto.UserUpdateRequest, use
 	}
 
 	return dto.UserUpdateResponse{
-		ID:         updatedUser.ID.String(),
-		Name:       updatedUser.Name,
-		TelpNumber: updatedUser.TelpNumber,
-		Role:       updatedUser.Role,
-		Email:      updatedUser.Email,
-		IsVerified: updatedUser.IsVerified,
+		ID:          updatedUser.ID.String(),
+		Name:        updatedUser.Name,
+		PhoneNumber: updatedUser.PhoneNumber,
+		Institution: updatedUser.Institution,
+		Role:        updatedUser.Role,
+		Email:       updatedUser.Email,
+		IsVerified:  updatedUser.IsVerified,
 	}, nil
 }
 

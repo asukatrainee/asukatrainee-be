@@ -13,10 +13,10 @@ func TestAuthValidation_ValidateRegisterRequest_Success(t *testing.T) {
 	authValidation := validation.NewAuthValidation()
 
 	req := userDto.UserCreateRequest{
-		Name:       "Test User",
-		Email:      "test@example.com",
-		TelpNumber: "12345678",
-		Password:   "password123",
+		Name:        "Test User",
+		Email:       "test@example.com",
+		PhoneNumber: "12345678",
+		Password:    "password123",
 	}
 
 	err := authValidation.ValidateRegisterRequest(req)
@@ -28,10 +28,10 @@ func TestAuthValidation_ValidateRegisterRequest_InvalidEmail(t *testing.T) {
 	authValidation := validation.NewAuthValidation()
 
 	req := userDto.UserCreateRequest{
-		Name:       "Test User",
-		Email:      "invalid-email", // This will be caught by binding:"required,email" in DTO
-		TelpNumber: "12345678",
-		Password:   "password123",
+		Name:        "Test User",
+		Email:       "invalid-email", // This will be caught by binding:"required,email" in DTO
+		PhoneNumber: "12345678",
+		Password:    "password123",
 	}
 
 	err := authValidation.ValidateRegisterRequest(req)
@@ -45,10 +45,10 @@ func TestAuthValidation_ValidateRegisterRequest_ShortPassword(t *testing.T) {
 	authValidation := validation.NewAuthValidation()
 
 	req := userDto.UserCreateRequest{
-		Name:       "Test User",
-		Email:      "test@example.com",
-		TelpNumber: "12345678",
-		Password:   "123", // This will be caught by binding:"required,min=8" in DTO
+		Name:        "Test User",
+		Email:       "test@example.com",
+		PhoneNumber: "12345678",
+		Password:    "123", // This will be caught by binding:"required,min=8" in DTO
 	}
 
 	err := authValidation.ValidateRegisterRequest(req)

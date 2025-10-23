@@ -3,8 +3,10 @@ package providers
 import (
 	"github.com/Caknoooo/go-gin-clean-starter/config"
 	authController "github.com/Caknoooo/go-gin-clean-starter/modules/auth/controller"
+	oauthController "github.com/Caknoooo/go-gin-clean-starter/modules/auth/controller"
 	authRepo "github.com/Caknoooo/go-gin-clean-starter/modules/auth/repository"
 	authService "github.com/Caknoooo/go-gin-clean-starter/modules/auth/service"
+	oauthService "github.com/Caknoooo/go-gin-clean-starter/modules/auth/service"
 	userController "github.com/Caknoooo/go-gin-clean-starter/modules/user/controller"
 	"github.com/Caknoooo/go-gin-clean-starter/modules/user/repository"
 	userService "github.com/Caknoooo/go-gin-clean-starter/modules/user/service"
@@ -34,6 +36,7 @@ func RegisterDependencies(injector *do.Injector) {
 
 	userService := userService.NewUserService(userRepository, db)
 	authService := authService.NewAuthService(userRepository, refreshTokenRepository, jwtService, db)
+	oauthservice := oauthService.NewOAuthService(userRepository, refreshTokenRepository, jwtService, db)
 
 	do.Provide(
 		injector, func(i *do.Injector) (userController.UserController, error) {
@@ -44,6 +47,12 @@ func RegisterDependencies(injector *do.Injector) {
 	do.Provide(
 		injector, func(i *do.Injector) (authController.AuthController, error) {
 			return authController.NewAuthController(i, authService), nil
+		},
+	)
+
+	do.Provide(
+		injector, func(i *do.Injector) (oauthController.OAuthController, error) {
+			return authController.NewOAuthController(oauthservice), nil
 		},
 	)
 }

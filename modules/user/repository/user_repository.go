@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"github.com/Caknoooo/go-gin-clean-starter/database/entities"
 	"gorm.io/gorm"
@@ -72,10 +73,17 @@ func (r *userRepository) CheckEmail(ctx context.Context, tx *gorm.DB, email stri
 	}
 
 	var user entities.User
-	if err := tx.WithContext(ctx).Where("email = ?", email).Take(&user).Error; err != nil {
+	//if err := tx.WithContext(ctx).Where("email = ?", email).Take(&user).Error; err != nil {
+	//	return entities.User{}, false, err
+	//}
+	//
+	//return user, true, nil
+	if err := tx.WithContext(ctx).Where("email = ?", email).First(&user).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return entities.User{}, false, nil
+		}
 		return entities.User{}, false, err
 	}
-
 	return user, true, nil
 }
 
